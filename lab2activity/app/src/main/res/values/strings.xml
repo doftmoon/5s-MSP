@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">lab2-activity</string>
+    <string name="name">Калькулятор расхода топлива</string>
+    <string name="modeT">Выберите режим калькулятора</string>
+    <string-array name="modeSpin">
+        <item>Средний расход топлива на 100км</item>
+    </string-array>
+    <string name="inputsT">Введите исходные данные</string>
+    <string name="usedFuelT">Израсходованно топлива</string>
+    <string name="distanceT">Пройденное расстояние</string>
+    <string name="costT">Стоимость топлива</string>
+    <string name="resultT">Результаты расчёта</string>
+    <string name="avgT">Средний расход топлива</string>
+    <string name="cost1kmT">Стоимость 1 км.</string>
+    <string name="submitB">Рассчитать</string>
+</resources>
