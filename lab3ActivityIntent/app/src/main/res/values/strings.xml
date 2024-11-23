@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">lab3-ActivityIntent</string>
+    <string name="name">Create manga card</string>
+    <string name="title">Title</string>
+    <string-array name="types">
+        <item>Manga</item>
+        <item>Manhwa</item>
+        <item>Manhua</item>
+    </string-array>
+    <string name="author">Author</string>
+    <string name="year">Year</string>
+    <string name="description">Description</string>
+    <string name="buttonStart">Create card</string>
+    <string name="buttonNext">Next</string>
+    <string name="buttonBack">Back</string>
+    <string name="buttonConfirm">Confirm</string>
+</resources>
