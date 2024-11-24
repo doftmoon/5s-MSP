@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="back">#BAD1BE</color>
     <color name="header">#7F81CCC1</color>
+    <color name="buttonInactive">#BAD1BEFF</color>
+    <color name="buttonActive">#D98E77DE</color>
 </resources>

@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class FirstStepActivity extends AppCompatActivity {
@@ -38,35 +40,15 @@ public class FirstStepActivity extends AppCompatActivity {
 		spinnerType = findViewById(R.id.spinnerType);
 		year = findViewById(R.id.year);
 		year.setFilters(new InputFilter[] {
-				  new InputFilter.LengthFilter(4),
-				  new InputFilter() {
-					  @Override
-					  public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-						  String newVal = dest.toString().substring(0, dstart) + source.subSequence(start, end) + dest.toString().substring(dend);
-						  if (newVal.isEmpty()){
-							   return "";
-						  }
-
-						  try {
-							  int input = Integer.parseInt(newVal);
-
-							  if (input >= 0 && input <= Calendar.getInstance().get(Calendar.YEAR)) {
-								  return null;
-							  }
-						  } catch (NumberFormatException e) {
-							  return "";
-						  }
-
-						  return "";
-					  }
-				  }
+				new InputFilter.LengthFilter(4),
 		});
 		intent = new Intent(this, SecondStepActivity.class);
 		back = new Intent(this, MainActivity.class);
 		if(getIntent().getExtras() != null){
 			intent.putExtras(getIntent().getExtras());
 			title.setText(intent.getStringExtra("title"));
-			returnSpinnerValue();
+			spinnerType.setSelection(Arrays.asList(getResources().getStringArray(R.array.types))
+					.indexOf(intent.getStringExtra("type")));
 			year.setText(intent.getStringExtra("year"));
 		}
 
@@ -82,19 +64,5 @@ public class FirstStepActivity extends AppCompatActivity {
 			startActivity(back);
 			finish();
 		});
-	}
-
-	private void returnSpinnerValue() {
-		ArrayAdapter adapter = (ArrayAdapter) spinnerType.getAdapter();
-		int pos = -1;
-		for (int i = 0; i < adapter.getCount(); i++) {
-			if (adapter.getItem(i).equals(intent.getStringExtra("type"))){
-				pos = i;
-				break;
-			}
-		}
-		if (pos != -1) {
-			spinnerType.setSelection(pos);
-		}
 	}
 }
