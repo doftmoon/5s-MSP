@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/buttonInactive"
             android:onClick="onButtonClick"
-            android:text="@string/tagMCFemale"
+            android:text="@string/tagMCMale"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -95,7 +95,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button8"
+            android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

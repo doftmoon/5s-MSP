@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ResultActivity extends AppCompatActivity {
 	Intent intent;
@@ -55,19 +56,30 @@ public class ResultActivity extends AppCompatActivity {
 			intent.putExtras(getIntent().getExtras());
 			back.putExtras(getIntent().getExtras());
 			for (String key : intent.getExtras().keySet()) {
-				String value = intent.getStringExtra(key);
+				String value = "";
+				if (!"tags".equals(key)) {
+					value = intent.getStringExtra(key);
+				} else {
+					ArrayList<String> tags = intent.getStringArrayListExtra(key);
+					if (!tags.isEmpty()) {
+						for (String tag : tags) {
+							value += tag + ", ";
+						}
+					} else {
+						value = "No tags found";
+					}
+				}
 
 				TextView textView = new TextView(this);
 				textView.setText(key + ": " + value);
 				keyValueLayout.addView(textView);
 			}
-			Toast.makeText(this, intent.getStringArrayListExtra("tags").toString(), Toast.LENGTH_SHORT).show();
 		}
 
 		findViewById(R.id.buttonNext).setOnClickListener(v -> {
 			ItemData newItem = new ItemData(intent.getStringExtra("title"), intent.getStringExtra("type"),
 					intent.getStringExtra("year"), intent.getStringExtra("author"), intent.getStringExtra("pg"),
-					intent.getStringExtra("description"), intent.getStringArrayExtra("tags"));
+					intent.getStringExtra("description"), intent.getStringArrayListExtra("tags"));
 			saveItemDataToJson(newItem);
 			startActivity(intent);
 			finish();

@@ -1,3 +1,5 @@
+import com.google.gson.Gson
+
 plugins {
     alias(libs.plugins.android.application)
 }

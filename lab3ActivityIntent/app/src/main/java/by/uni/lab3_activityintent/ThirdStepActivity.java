@@ -18,6 +18,8 @@ public class ThirdStepActivity extends AppCompatActivity {
 	Intent intent;
 	Intent back;
 	private ArrayList<Button> selectedButtons = new ArrayList<>();
+	ArrayList<String> selectedButtonNames = new ArrayList<>();
+	ArrayList<Button> allButtons = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +34,27 @@ public class ThirdStepActivity extends AppCompatActivity {
 		intent = new Intent(this, ResultActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 		back = new Intent(this, SecondStepActivity.class);
+		allButtons.add(findViewById(R.id.button));
+		allButtons.add(findViewById(R.id.button2));
+		allButtons.add(findViewById(R.id.button3));
+		allButtons.add(findViewById(R.id.button4));
+		Toast.makeText(this, selectedButtonNames.toString(), Toast.LENGTH_SHORT).show();
 		if(getIntent().getExtras() != null) {
 			intent.putExtras(getIntent().getExtras());
 			back.putExtras(getIntent().getExtras());
-			// TODO: backing tags values and buttons state
-//			if (back.getStringArrayListExtra("tags") != null){
-//				ArrayList<String> selectedButtonNames = new ArrayList<>();
-//				for (Button selectedButton : selectedButtons) {
-////					if (selectedButton.getText().toString() == back.getStringExtra())
-////					selectedButtonNames.add(selectedButton.getText().toString());
-//				}
-//			}
+			//restore buttons
+			if (back.hasExtra("tags")) {
+				selectedButtonNames = back.getStringArrayListExtra("tags");
+				returnButtonState();
+			}
 		}
 
 		findViewById(R.id.buttonNext).setOnClickListener(v -> {
-			ArrayList<String> selectedButtonNames = new ArrayList<>();
-			for (Button selectedButton : selectedButtons) {
-				selectedButtonNames.add(selectedButton.getText().toString());
-			}
+//			for (Button selectedButton : selectedButtons) {
+//				if (!selectedButtonNames.contains(selectedButton.getText().toString())) {
+//					selectedButtonNames.add(selectedButton.getText().toString());
+//				}
+//			}
 			intent.putStringArrayListExtra("tags", selectedButtonNames);
 			startActivity(intent);
 			finish();
@@ -61,15 +66,51 @@ public class ThirdStepActivity extends AppCompatActivity {
 		});
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putStringArrayList("selectedButtonTags", new ArrayList<>(selectedButtonNames));
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		selectedButtonNames = savedInstanceState.getStringArrayList("selectedButtonTags");
+		if (selectedButtonNames != null) {
+			returnButtonState();
+			selectedButtons.clear(); // Очищаем список перед добавлением кнопок заново
+			for (Button button : allButtons) {
+				if (selectedButtonNames.contains(button.getText().toString())) {
+					selectedButtons.add(button);
+				}
+			}
+		}
+	}
+
 	public void onButtonClick(View v) {
 		Button button = (Button) v;
 
 		if (selectedButtons.contains(button)) {
 			selectedButtons.remove(button);
-			button.setBackgroundColor(getResources().getColor(R.color.buttonInactive)); // Возвращаем исходный цвет кнопки
+			selectedButtonNames.remove(button.getText().toString());
+			button.setBackgroundColor(getResources().getColor(R.color.buttonInactive));
 		} else {
 			selectedButtons.add(button);
-			button.setBackgroundColor(getResources().getColor(R.color.buttonActive)); // Устанавливаем новый цвет для выбранной кнопки
+			selectedButtonNames.add(button.getText().toString());
+			button.setBackgroundColor(getResources().getColor(R.color.buttonActive));
+		}
+	}
+
+	public void returnButtonState() {
+		if (selectedButtonNames != null) {
+			for (String backItem : selectedButtonNames) {
+				for (Button button : allButtons) {
+					if (button.getText().toString().contains(backItem) && !selectedButtons.contains(button)) {
+						selectedButtons.add(button);
+						button.setBackgroundColor(getResources().getColor(R.color.buttonActive));
+					}
+				}
+			}
 		}
 	}
 }

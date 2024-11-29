@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 			if (resultCode == RESULT_OK){
 				ItemData newItem = new ItemData(data.getStringExtra("title"), data.getStringExtra("type"),
 						data.getStringExtra("year"), data.getStringExtra("author"), data.getStringExtra("pg"),
-						data.getStringExtra("description"), data.getStringArrayExtra("tags"));
+						data.getStringExtra("description"), data.getStringArrayListExtra("tags"));
 				saveItemDataToJson(newItem);
 			}
 		}

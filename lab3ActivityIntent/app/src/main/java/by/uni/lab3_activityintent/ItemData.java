@@ -1,5 +1,7 @@
 package by.uni.lab3_activityintent;
 
+import java.util.ArrayList;
+
 public class ItemData {
 	private String title;
 	private String type;
@@ -7,9 +9,9 @@ public class ItemData {
 	private String author;
 	private String pg;
 	private String description;
-	private String[] tags;
+	private ArrayList<String> tags;
 
-	public ItemData(String title, String type, String year, String author, String pg, String description, String[] tags) {
+	public ItemData(String title, String type, String year, String author, String pg, String description, ArrayList<String> tags) {
 		this.title = title;
 		this.type = type;
 		this.year = year;
@@ -67,11 +69,11 @@ public class ItemData {
 		this.description = description;
 	}
 
-	public String[] getTags() {
+	public ArrayList<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(String[] tags) {
+	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
 }
