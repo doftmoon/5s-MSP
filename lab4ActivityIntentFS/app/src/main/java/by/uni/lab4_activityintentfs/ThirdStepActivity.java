@@ -1,4 +1,4 @@
-package by.uni.lab3_activityintent;
+package by.uni.lab4_activityintentfs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,11 +50,6 @@ public class ThirdStepActivity extends AppCompatActivity {
 		}
 
 		findViewById(R.id.buttonNext).setOnClickListener(v -> {
-//			for (Button selectedButton : selectedButtons) {
-//				if (!selectedButtonNames.contains(selectedButton.getText().toString())) {
-//					selectedButtonNames.add(selectedButton.getText().toString());
-//				}
-//			}
 			intent.putStringArrayListExtra("tags", selectedButtonNames);
 			startActivity(intent);
 			finish();

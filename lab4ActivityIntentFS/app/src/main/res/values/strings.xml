@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">lab4-ActivityIntentFS</string>
+    <string name="name">Create manga card</string>
+    <string name="title">Title</string>
+    <string-array name="types">
+        <item>Manga</item>
+        <item>Manhwa</item>
+        <item>Manhua</item>
+        <item>Comics</item>
+    </string-array>
+    <string name="year">Year</string>
+    <string name="author">Author</string>
+    <string name="pg">Age restriction</string>
+    <string name="description">Description</string>
+    <string name="tagMCMale">MC Male</string>
+    <string name="tagMCFemale">MC Female</string>
+    <string name="tagMagic">Magic</string>
+    <string name="tagMurim">Murim</string>
+    <string name="buttonStart">Create card</string>
+    <string name="buttonNext">Next</string>
+    <string name="buttonBack">Back</string>
+    <string name="buttonConfirm">Confirm</string>
+</resources>
