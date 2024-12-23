@@ -6,11 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,15 +19,16 @@ import java.util.ArrayList;
 public class ResultActivity extends AppCompatActivity {
 	Intent intent;
 	Intent back;
+
 	private void saveItemDataToJson(ItemData newItem) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(newItem);
 
-		try (FileWriter fileWriter = new FileWriter(new File(getFilesDir(),"dataItem.json"))) {
-			fileWriter.write(json);
-			Toast.makeText(this, fileWriter.toString(), Toast.LENGTH_SHORT).show();
+		try (FileWriter fileWriter = new FileWriter(new File(getFilesDir(), "dataItem.json"), true)) {
+			fileWriter.write(json + "\n");
+			Toast.makeText(this, "Item saved successfully", Toast.LENGTH_SHORT).show();
 		} catch (IOException e) {
-			System.err.println("Ошибка при записи JSON данных в файл: " + e.getMessage());
+			System.err.println("Error saving JSON data to file: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -39,30 +36,25 @@ public class ResultActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		EdgeToEdge.enable(this);
 		setContentView(R.layout.activity_result);
-		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-			Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-			return insets;
-		});
+
 		intent = new Intent(this, MainActivity.class);
-//		intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
 		back = new Intent(this, ThirdStepActivity.class);
+
 		LinearLayout keyValueLayout = findViewById(R.id.keyValueLayout);
-		if(getIntent().getExtras() != null) {
+
+		if (getIntent().getExtras() != null) {
 			intent.putExtras(getIntent().getExtras());
 			back.putExtras(getIntent().getExtras());
+
 			for (String key : intent.getExtras().keySet()) {
 				String value = "";
 				if (!"tags".equals(key)) {
 					value = intent.getStringExtra(key);
 				} else {
 					ArrayList<String> tags = intent.getStringArrayListExtra(key);
-					if (!tags.isEmpty()) {
-						for (String tag : tags) {
-							value += tag + ", ";
-						}
+					if (tags != null && !tags.isEmpty()) {
+						value = String.join(", ", tags);
 					} else {
 						value = "No tags found";
 					}
@@ -75,9 +67,16 @@ public class ResultActivity extends AppCompatActivity {
 		}
 
 		findViewById(R.id.buttonNext).setOnClickListener(v -> {
-			ItemData newItem = new ItemData(intent.getStringExtra("title"), intent.getStringExtra("type"),
-					intent.getStringExtra("year"), intent.getStringExtra("author"), intent.getStringExtra("pg"),
-					intent.getStringExtra("description"), intent.getStringArrayListExtra("tags"));
+			ItemData newItem = new ItemData(
+					intent.getStringExtra("title"),
+					intent.getStringExtra("type"),
+					intent.getStringExtra("year"),
+					intent.getStringExtra("author"),
+					intent.getStringExtra("pg"),
+					intent.getStringExtra("description"),
+					intent.getStringArrayListExtra("tags")
+			);
+
 			saveItemDataToJson(newItem);
 			startActivity(intent);
 			finish();
