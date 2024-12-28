@@ -10,25 +10,47 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ResultActivity extends AppCompatActivity {
 	Intent intent;
 	Intent back;
 
 	private void saveItemDataToJson(ItemData newItem) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(newItem);
+		Gson gson = new Gson();
+		String fileName = "event_data.json";
+		List<ItemData> itemList = new ArrayList<>();
 
-		try (FileWriter fileWriter = new FileWriter(new File(getFilesDir(), "dataItem.json"), true)) {
-			fileWriter.write(json + "\n");
-			Toast.makeText(this, "Item saved successfully", Toast.LENGTH_SHORT).show();
-		} catch (IOException e) {
-			System.err.println("Error saving JSON data to file: " + e.getMessage());
+		try (FileInputStream fis = openFileInput(fileName)) {
+			InputStreamReader isr = new InputStreamReader(fis);
+			Type eventListType = new TypeToken<ArrayList<ItemData>>() {}.getType();
+			itemList = gson.fromJson(isr, eventListType);
+			if (itemList == null) {
+				itemList = new ArrayList<>();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		itemList.add(newItem);
+
+		String json = gson.toJson(itemList);
+
+		try (FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE)) {
+			fos.write(json.getBytes());
+			Toast.makeText(this, "Event saved successfully", Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			Toast.makeText(this, "Error saving event data", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}

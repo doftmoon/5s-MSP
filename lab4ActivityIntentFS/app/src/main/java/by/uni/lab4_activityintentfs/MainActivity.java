@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -19,14 +20,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-	ArrayAdapter<ItemData> adapter;
 	ListView listViewItems;
 	List<ItemData> itemDataList;
 
@@ -41,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
 			return insets;
 		});
 		listViewItems = findViewById(R.id.listViewItems);
-		itemDataList = new ArrayList<>();
-
-		adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemDataList);
-		listViewItems.setAdapter(adapter);
 		loadItemDataFromJson();
+
+		ArrayAdapter<ItemData> adapter = new ArrayAdapter<>(this,
+				android.R.layout.simple_list_item_1, itemDataList);
+		listViewItems.setAdapter(adapter);
 
 		listViewItems.setOnItemClickListener((parent, view, position, id) -> {
 			ItemData selectedItem = itemDataList.get(position);
@@ -62,25 +65,17 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void loadItemDataFromJson() {
-		File file = new File(getFilesDir(), "dataItem.json");
-		if (file.length() == 0) {
-			Toast.makeText(this, "No data found in the Json file", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		try (BufferedReader reader = new BufferedReader(new FileReader(new File(getFilesDir(), "dataItem.json")))) {
-			Gson gson = new GsonBuilder().create();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				if(!line.trim().isEmpty()) {
-					ItemData item = gson.fromJson(line, ItemData.class);
-					itemDataList.add(item);
-				}
+		Gson gson = new Gson();
+
+		try (FileInputStream fis = new FileInputStream(new File(getFilesDir(), "dataItem.json"))) {
+			InputStreamReader isr = new InputStreamReader(fis);
+			Type eventListType = new TypeToken<ArrayList<ItemData>>() {}.getType();
+			itemDataList = gson.fromJson(isr, eventListType);
+
+			if (itemDataList == null) {
+				itemDataList = new ArrayList<>();
 			}
 		} catch (IOException e) {
-			Toast.makeText(this, "Error loading item data: " +e.getMessage(), Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			Toast.makeText(this, "Error parsing Json data: " +e.getMessage(), Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
