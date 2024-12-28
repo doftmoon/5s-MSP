@@ -26,17 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-	private void saveItemDataToJson(ItemData newItem) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(newItem);
-
-		try (FileWriter fileWriter = new FileWriter("item_data.json")) {
-			fileWriter.write(json);
-			Toast.makeText(this, fileWriter.toString(), Toast.LENGTH_SHORT).show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	ArrayAdapter<ItemData> adapter;
 	ListView listViewItems;
 	List<ItemData> itemDataList;
 
@@ -53,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
 		listViewItems = findViewById(R.id.listViewItems);
 		itemDataList = new ArrayList<>();
 
-		loadItemDataFromJson();
-
-		ArrayAdapter<ItemData> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemDataList);
+		adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemDataList);
 		listViewItems.setAdapter(adapter);
+		loadItemDataFromJson();
 
 		listViewItems.setOnItemClickListener((parent, view, position, id) -> {
 			ItemData selectedItem = itemDataList.get(position);
@@ -70,20 +59,6 @@ public class MainActivity extends AppCompatActivity {
 			startActivity(intent);
 			finish();
 		});
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		Toast.makeText(this, ""+resultCode, Toast.LENGTH_SHORT).show();
-		if (requestCode == 1){
-			if (resultCode == RESULT_OK){
-				ItemData newItem = new ItemData(data.getStringExtra("title"), data.getStringExtra("type"),
-						data.getStringExtra("year"), data.getStringExtra("author"), data.getStringExtra("pg"),
-						data.getStringExtra("description"), data.getStringArrayListExtra("tags"));
-				saveItemDataToJson(newItem);
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void loadItemDataFromJson() {
