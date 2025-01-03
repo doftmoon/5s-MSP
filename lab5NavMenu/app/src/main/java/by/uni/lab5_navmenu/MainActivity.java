@@ -26,20 +26,21 @@ public class MainActivity extends AppCompatActivity {
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 			return insets;
 		});
-		ActivityResultLauncher<Intent> AddEventActivityLauncher = registerForActivityResult(
-				registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-					@Override
-					public void onActivityResult(ActivityResult o) {
-						if (o.getResultCode() == ActivityResult.OK) {
-							Intent data = o.getData();
-						}
-					}
-				})
-		);
+//		ActivityResultLauncher<Intent> AddEventActivityLauncher = registerForActivityResult(
+//				registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+//					@Override
+//					public void onActivityResult(ActivityResult o) {
+//						if (o.getResultCode() == ActivityResult.OK) {
+//							Intent data = o.getData();
+//						}
+//					}
+//				})
+//		);
 		addEventActivity = new Intent(this, AddEventActivity.class);
 
 		findViewById(R.id.buttonStartAddEventActivity).setOnClickListener(v -> {
-			AddEventActivityLauncher.launch(addEventActivity);
+			//AddEventActivityLauncher.launch(addEventActivity);
+			startActivity(addEventActivity);
 		});
 	}
 }
